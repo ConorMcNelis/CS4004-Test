@@ -1,0 +1,243 @@
+test1.
+Failure code.
+package test1;
+
+public class class1 {
+	int square = 3;	
+	public int getSquared() {
+		int squared = square + square;
+		return squared;
+	}
+}
+
+Successful code.
+package test1;
+
+public class class1 {
+	int square = 3;	
+	public int getSquared() {
+		int squared = square * square;
+		return squared;
+	}
+}
+
+Test.
+package test1;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+class class1Test {
+	@Test
+	void testgetSquared() {
+		class1 t1 = new class1();
+		int ans = t1.getSquared();
+		assertEquals(9,ans);
+	}
+
+}
+Failure.
+testgetSquared: expected: <9> but was: <6>
+What happened.
+The original code used + instead of *.
+
+
+Test2.
+Failure code.
+package test1;
+public class class2 {
+	int year = 2020;
+	boolean isLeapYear;
+	public boolean getLeapYear() {
+		if(year / 4 == 0) {
+			if(year / 100 == 0) {
+				if(year / 400 == 0) {
+					isLeapYear = true;
+				}else {
+					isLeapYear = false;
+				}
+			}else {
+				isLeapYear = true;
+			}
+		}else {
+			isLeapYear = false;
+		}
+		return isLeapYear;
+	}
+}
+
+Successful code.
+package test1;
+public class class2 {
+	int year = 2020;
+	boolean isLeapYear;
+	public boolean getLeapYear() {
+		if(year % 4 == 0) {
+			if(year % 100 == 0) {
+				if(year % 400 == 0) {
+					isLeapYear = true;
+				}else {
+					isLeapYear = false;
+				}
+			}else {
+				isLeapYear = true;
+			}
+		}else {
+			isLeapYear = false;
+		}
+		return isLeapYear;
+	}
+}
+
+Test.
+package test1;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+class class2Test {
+	@Test
+	void testgetLeapYear() {
+		class2 t2 = new class2();
+		boolean ans = t2.getLeapYear();
+		assertEquals(true,ans);
+	}
+}
+Failure.
+testgetLeapYear: expected: <true> but was: <false>
+What happened.
+The original code used / instead of %.
+
+
+Test3.
+Failure code.
+package test1;
+public class class3 {
+	char coin;
+	int toss;
+	public char getCoinToss(int toss) {
+		if(toss == 0) {
+			coin = 'h';
+		} else if(toss == 1){
+			coin = 't';
+		}
+		return coin;
+	}
+}
+
+Successful code.
+package test1;
+
+public class class3 {
+	char coin;
+	int toss;
+	
+	public char getCoinToss(int toss) {
+		//toss = (int)Math.random()*2;
+		if(toss == 1) {
+			coin = 'h';
+		} else if(toss == 2){
+			coin = 't';
+		}
+		return coin;
+	}
+}
+
+Test.
+package test1;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+
+class class3Test {
+	@ParameterizedTest(name = "{index} coin ({0}) is {1}")
+	@CsvSource({
+		"1, h",
+		"2, t",
+		
+	})
+	void testCheck(int toss, char expectedResult) {
+		class3 checker = new class3();
+		char result = checker.getCoinToss(toss);
+		assertEquals(expectedResult, result);
+	}
+}
+Failures.
+testCheck: expected: <h> but was: <t>
+What happened.
+Input was 0 or 1 instead of 1 or 2 since a user would normally think to start counting at 1.
+
+
+Test4.
+
+Failure code.
+package test1;
+public class class4 {
+	double cola = 1.50, chocolate = 2.00, jellies = 1.20, crisps = 1.80;
+	String str1 = "cola", str2 = "chocolate", str3 = "jellies", str4 = "crisps";  
+	boolean afford;	
+	public boolean getAfford(String item, double money) {
+		afford = false;
+		if(money > cola && item.equalsIgnoreCase("cola")) {
+			afford =  true;
+		} else if(money > chocolate && item.equalsIgnoreCase("chocolate")) {
+			afford =  true;
+		} else if(money > jellies && item.equalsIgnoreCase("jellies")) {
+			afford =  true;
+		} else if(money > crisps && item.equalsIgnoreCase("crisps")) {
+			afford =  true;
+		}
+		return afford;
+	}
+}
+
+Successful code.
+
+package test1;
+public class class4 {
+	double cola = 1.50, chocolate = 2.00, jellies = 1.20, crisps = 1.80;
+	String str1 = "cola", str2 = "chocolate", str3 = "jellies", str4 = "crisps";  
+	boolean afford;
+	public boolean getAfford(String item, double money) {
+		afford = false;
+		if(money >= cola && item.equalsIgnoreCase("cola")) {
+			afford =  true;
+		} else if(money >= chocolate && item.equalsIgnoreCase("chocolate")) {
+			afford =  true;
+		} else if(money >= jellies && item.equalsIgnoreCase("jellies")) {
+			afford =  true;
+		} else if(money >= crisps && item.equalsIgnoreCase("crisps")) {
+			afford =  true;
+		}
+		return afford;
+	}
+}
+
+Test.
+package test1;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+class class4Test {
+	@ParameterizedTest(name = "{index} item ({0}) is {1}")
+	@CsvSource({
+		"cola, 1.50, true",
+		"chocolate, 2.00, true",
+		"chocolate, 1.50, false",
+		"jellies, 1.50, true",
+		"jellies, 1.00, false",
+		"crisps, 1.80, true", 
+		"crisps, 3.00, true"	
+	})
+	void testAfford(String name, double amount, boolean expectedResult) {
+		class4 checker = new class4();
+		boolean result = checker.getAfford("cola", 1.50);	
+		assertEquals(expectedResult, result);
+	}
+}
+Failure.
+1 testAfford: expected: <true> but was: <false>
+2 testAfford: expected: <true> but was: <false>
+6 testAfford: expected: <true> but was: <false>
+What happened
+code used > instead of >=.
+
+
